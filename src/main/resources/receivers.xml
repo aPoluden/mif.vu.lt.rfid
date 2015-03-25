@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes">
+    <ROOT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    	<receivers>
+    		<receiver name="baltas" oid="">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="melynas" oid="">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="raudonas" oid="">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="zalias" oid="">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+        </receivers>
+    </ROOT>
