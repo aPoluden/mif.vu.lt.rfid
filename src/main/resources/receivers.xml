@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <ROOT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     	<receivers>
-    		<receiver name="baltas" oid="">
+    		<receiver name="baltas" oid="123">
     			<coords x="0" y="0" z="0"/>
     		</receiver>
-    		<receiver name="melynas" oid="">
+    		<receiver name="melynas" oid="123">
     			<coords x="0" y="0" z="0"/>
     		</receiver>
-    		<receiver name="raudonas" oid="">
+    		<receiver name="raudonas" oid="123">
     			<coords x="0" y="0" z="0"/>
     		</receiver>
-    		<receiver name="zalias" oid="">
+    		<receiver name="zalias" oid="123">
     			<coords x="0" y="0" z="0"/>
     		</receiver>
         </receivers>
