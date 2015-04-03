@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <ROOT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    	<receivers>
+    		<receiver name="baltas" oid="3092540530">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="melynas" oid="572923846">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="raudonas" oid="3855914882">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="zalias" oid="1010818420">
+    			<coords x="0" y="0" z="0"/>
+    		</receiver>
+    		<receiver name="geltonas" oid="3670251300">
+    		    <coords x="0" y="0" z="0"/>
+    		</receiver>>
+        </receivers>
+        
+        <tags>
+        	<tag oid="990961860">
+        		<coords x="0" y="0" z="0"/>
+        	</tag>
+        </tags>
+        
+    </ROOT>
