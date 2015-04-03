@@ -1,16 +1,26 @@
 package mif.vu.lt.rfid.app.model;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Observable;
 import java.util.Set;
+
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import lombok.Getter;
 import lombok.Setter;
-import mif.vu.lt.rfid.app.model.coords.Coords;
+import lombok.ToString;
 
 @Getter @Setter
+@ToString
 public class Receiver extends Element {
+	
+	public Receiver(Observable observable) {
+		super(observable);
+	}
+
+	public Receiver() { }
 	
 	@XmlAttribute
 	private String name;
@@ -23,7 +33,24 @@ public class Receiver extends Element {
 	
 	@XmlTransient
 	Set<Tag> tags;
-	
-	@XmlElement
-	Coords coords;
+
+	@Override
+	public void update(Observable o, Object arg) {
+		Receiver receiverTemp = (Receiver) arg;
+		
+		for (Field f : Receiver.class.getDeclaredFields()) {
+			if (f.getName().equals("name")) {
+				continue;
+			}
+		    Object obj;
+		    try {
+				obj = getValue(receiverTemp, f.getName());
+				this.setValue(this, obj, f.getName());
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+			}
+				
+
+		}
+	}
 }

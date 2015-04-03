@@ -10,6 +10,15 @@ import lombok.Setter;
 @Getter @Setter
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Coords {
+	
+	public Coords() { 
+	}
+	
+	public Coords(int x, int y, int z) { 
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
 	@XmlElement
 	private int x;

@@ -21,4 +21,7 @@ public class Root {
 	@XmlElement(name="receiver")
 	Set<Receiver> receivers = new HashSet<>();
 	
+	@XmlElementWrapper
+	@XmlElement(name="tag")
+	Set<Tag> tags = new HashSet<>();
 }
