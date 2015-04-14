@@ -2,7 +2,7 @@ package mif.vu.lt.rfid.app.model.coords;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,12 +20,12 @@ public class Coords {
 		this.z = z;
 	}
 
-	@XmlElement
+	@XmlAttribute
 	private int x;
 	
-	@XmlElement
+	@XmlAttribute
 	private int y;
 	
-	@XmlElement
+	@XmlAttribute
 	private int z;
 }
