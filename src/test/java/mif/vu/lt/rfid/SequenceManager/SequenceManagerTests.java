@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import mif.vu.lt.rfid.app.Application;
+import mif.vu.lt.rfid.app.controller.ElementController;
 import mif.vu.lt.rfid.app.manager.SequenceManager;
 import mif.vu.lt.rfid.app.model.Receiver;
 import mif.vu.lt.rfid.app.model.Tag;
@@ -36,9 +37,8 @@ public class SequenceManagerTests {
 		receiver.getTags().add(tag1);
 		receiver.getTags().add(tag2);
 		
-		sequenceManager.getSockerQueue().add(receiver);
-		sequenceManager.resolveSeq();
-		
+		sequenceManager.getSocketQueue().add(receiver);
+		sequenceManager.resolveSeq(new ElementController());
 		
 		tag1 = new Tag();
 		tag1.setOid(10L);

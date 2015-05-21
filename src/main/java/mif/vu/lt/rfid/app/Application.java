@@ -28,35 +28,33 @@ public class Application {
 	}
 	
 	public void run(int port, int buffSize) throws Exception {
-		
-//		TO - DO controller set Tags
+		// Fill controller with elements
 		ElementController controller = new ElementController();
 		controller.setReceivers(root.getReceivers());
 		controller.setTags(root.getTags());
-		controller.addObserverToReceiver();
 		
-		BlockingQueue<Receiver> queue = new LinkedBlockingQueue<>();
-		SocketManager socketManager = new SocketManager(new JsonManager(), port, buffSize, queue);
+		BlockingQueue<Receiver> SocketToSequence = new LinkedBlockingQueue<>();
 		
-		SequenceManager seqManager = new SequenceManager(new MinMax(), root, queue);
+		SocketManager socketManager = new SocketManager(new JsonManager(), port, buffSize, SocketToSequence);
+		SequenceManager seqManager = new SequenceManager(new MinMax(), root, SocketToSequence);
 		
 		Thread socketThread = new Thread(socketManager);
 		socketThread.start();
 		
+		// Start pull messages from queue
 		new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 		        try {
-					seqManager.resolveSeq();
+					seqManager.resolveSeq(controller);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}).start();
 		
+		// Start receiveng messages from SequnceManager internal queue
 		new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 		        try {

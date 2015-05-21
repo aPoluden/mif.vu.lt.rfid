@@ -2,25 +2,25 @@
     <ROOT xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     	<receivers>
     		<receiver name="baltas" oid="3092540530">
-    			<coords x="0" y="0" z="0"/>
+    			<coords x="100" y="100" z="0"/>
     		</receiver>
     		<receiver name="melynas" oid="572923846">
-    			<coords x="0" y="0" z="0"/>
+    			<coords x="300" y="50" z="0"/>
     		</receiver>
     		<receiver name="raudonas" oid="3855914882">
-    			<coords x="0" y="0" z="0"/>
+    			<coords x="700" y="89" z="0"/>
     		</receiver>
     		<receiver name="zalias" oid="1010818420">
-    			<coords x="0" y="0" z="0"/>
+    			<coords x="23" y="11" z="0"/>
     		</receiver>
     		<receiver name="geltonas" oid="3670251300">
-    		    <coords x="0" y="0" z="0"/>
+    		    <coords x="12" y="400" z="0"/>
     		</receiver>>
         </receivers>
         
         <tags>
         	<tag oid="990961860">
-        		<coords x="0" y="0" z="0"/>
+        		<coords x="1" y="1" z="0"/>
         	</tag>
         </tags>
         

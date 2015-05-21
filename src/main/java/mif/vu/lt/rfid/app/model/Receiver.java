@@ -49,8 +49,6 @@ public class Receiver extends Element {
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
 			}
-				
-
 		}
 	}
 }

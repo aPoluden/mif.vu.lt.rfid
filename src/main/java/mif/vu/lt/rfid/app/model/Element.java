@@ -34,6 +34,9 @@ public abstract class Element implements Observer {
 	@XmlTransient
 	private Integer seq;
 	
+	@XmlTransient
+	private Integer rssi;
+	
 	@XmlElement
 	Coords coords;
 

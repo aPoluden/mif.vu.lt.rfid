@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter @Setter
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,9 +20,6 @@ public class Tag extends Element {
 	}
 	
 	public Tag() { }
-
-	@XmlTransient
-	private Integer rssi;
 	
 	@XmlTransient
 	private Integer butt;

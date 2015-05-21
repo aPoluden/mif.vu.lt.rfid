@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter @Setter
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -15,61 +15,82 @@ import mif.vu.lt.rfid.app.model.Tag;
 import mif.vu.lt.rfid.app.model.algorithm.Algorithm;
 import mif.vu.lt.rfid.app.model.coords.Coords;
 
+import org.apache.commons.lang3.time.StopWatch;
 @Getter 
 public class SequenceManager {
 
 	private int sequenceGenerator = 0;
 	private Algorithm algorithm;
-	private BlockingQueue<List<TagSpec>> queue;
-	private BlockingQueue<Receiver> sockerQueue;
+	private BlockingQueue<List<TagSpec>> internalQueue;
+	private BlockingQueue<Receiver> socketQueue;
 	private Root root;
+	private StopWatch watch;
 	
 	public SequenceManager(Algorithm algorithm, Root root, BlockingQueue<Receiver> socketQueue) {
 		this.algorithm = algorithm;
-		queue = new LinkedBlockingQueue<List<TagSpec>>();
-		this.sockerQueue = socketQueue;
+		internalQueue = new LinkedBlockingQueue<List<TagSpec>>();
+		this.socketQueue = socketQueue;
 		this.root = root;
+		watch = new StopWatch();
+		try {
+			Thread.sleep(10000);
+			System.out.println("Start");
+			watch.start();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-//	Hybrid producer - consumer
-	public void resolveSeq() throws InterruptedException {
+/*
+ * Waits messages from socket. Further sends messages to BlockingQueue
+ * May filter Calibration Messages
+ * 
+ */
+	public void resolveSeq(ElementController controller) throws InterruptedException {
 		List<TagSpec> list = null;
 		while (true) {
-		    Receiver receiverJson = sockerQueue.take();
-		    Long receiverOid = receiverJson.getOid();
+		    Receiver receiverJson = socketQueue.take();
+		    Long receiverJsonOid = receiverJson.getOid();
+		    System.out.println(receiverJsonOid);
 		    for (Tag tag : receiverJson.getTags()) {
+		    	System.out.println("Time " + watch.getTime() / 1000);
+		    	if (controller.checkIfReceiver(tag.getOid())) {
+		    		System.out.println(tag);
+ 		    		System.out.println(tag.getOid() + " " + algorithm.convertRssi(tag.getRssi()));
+		    		continue;
+		    	}
 			    Integer key = tag.getSeq();
                 if (sequenceGenerator == key) {
-		    	    list.add(new TagSpec(receiverOid, tag.getOid(), tag.getRssi()));
+		    	    list.add(new TagSpec(receiverJsonOid, tag.getOid(), tag.getRssi()));
 		        } else if (sequenceGenerator < key) {
 			        if (list == null) { 
 			    	    list = new ArrayList<TagSpec>();
-			        } else {
-			        	queue.put(list);
+			        } else if (!controller.checkIfReceiver(tag.getOid())) {
+			        	internalQueue.put(list);
 			        	list = new ArrayList<TagSpec>();
 			        }
-			        list.add(new TagSpec(receiverOid, tag.getOid(), tag.getRssi()));
+			        list.add(new TagSpec(receiverJsonOid, tag.getOid(), tag.getRssi()));
 			        sequenceGenerator = key;
+		        } else {
+//		           Garbage messages
 		        }
 		    }
 		}
 	}
 	
-	// consumer
+	// Receives messages from BlockingQueue for processing
 	public void resolveCoords(ElementController controller) throws InterruptedException {
 		Long elementOid = null;
 	    while (true) {
-			List<TagSpec> list = queue.take();
+			List<TagSpec> list = internalQueue.take();
 			if (!list.isEmpty()) {
-				// Hard coded filter
-				if (list.get(0).getTagOid().equals(990961860l)) {
-			        Coords coords = algorithm.<TagSpec>compute(list, root);
+			        Coords coords = algorithm.<TagSpec>compute(list, controller);
 			        if (coords == null) { 
 			        	continue;
 			        }
 			        elementOid = list.get(0).getTagOid();
                     controller.updateTagCoords(elementOid, coords);
-				}
 			}
 		}
 	}
