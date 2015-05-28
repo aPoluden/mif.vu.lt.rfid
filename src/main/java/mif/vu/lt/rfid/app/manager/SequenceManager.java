@@ -13,6 +13,7 @@ import mif.vu.lt.rfid.app.model.Receiver;
 import mif.vu.lt.rfid.app.model.Root;
 import mif.vu.lt.rfid.app.model.Tag;
 import mif.vu.lt.rfid.app.model.algorithm.Algorithm;
+import mif.vu.lt.rfid.app.model.algorithm.Calibration;
 import mif.vu.lt.rfid.app.model.coords.Coords;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -25,8 +26,10 @@ public class SequenceManager {
 	private BlockingQueue<Receiver> socketQueue;
 	private Root root;
 	private StopWatch watch;
+	private Calibration calibrate;
 	
 	public SequenceManager(Algorithm algorithm, Root root, BlockingQueue<Receiver> socketQueue) {
+		calibrate = new Calibration();
 		this.algorithm = algorithm;
 		internalQueue = new LinkedBlockingQueue<List<TagSpec>>();
 		this.socketQueue = socketQueue;
@@ -34,7 +37,6 @@ public class SequenceManager {
 		watch = new StopWatch();
 		try {
 			Thread.sleep(10000);
-			System.out.println("Start");
 			watch.start();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -48,16 +50,14 @@ public class SequenceManager {
  * 
  */
 	public void resolveSeq(ElementController controller) throws InterruptedException {
+		
 		List<TagSpec> list = null;
 		while (true) {
 		    Receiver receiverJson = socketQueue.take();
 		    Long receiverJsonOid = receiverJson.getOid();
-		    System.out.println(receiverJsonOid);
 		    for (Tag tag : receiverJson.getTags()) {
-		    	System.out.println("Time " + watch.getTime() / 1000);
 		    	if (controller.checkIfReceiver(tag.getOid())) {
-		    		System.out.println(tag);
- 		    		System.out.println(tag.getOid() + " " + algorithm.convertRssi(tag.getRssi()));
+		    		calibrate.calibrate(controller, receiverJson.getOid() ,tag);
 		    		continue;
 		    	}
 			    Integer key = tag.getSeq();
@@ -73,7 +73,7 @@ public class SequenceManager {
 			        list.add(new TagSpec(receiverJsonOid, tag.getOid(), tag.getRssi()));
 			        sequenceGenerator = key;
 		        } else {
-//		           Garbage messages
+//		            Garbage messages
 		        }
 		    }
 		}

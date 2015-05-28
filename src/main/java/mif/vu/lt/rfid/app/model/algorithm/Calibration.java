@@ -12,38 +12,44 @@ import mif.vu.lt.rfid.app.model.coords.Coords;
  * 
  */
 public class Calibration implements Algorithm {
-
-	private boolean firstRun = true;
 	
 	@Override
 	public <T extends TagSpec> Coords compute(List<T> tagSpec, ElementController controller) {
 		return null;
 	}
 	
-	public boolean error(ElementController controller, Long receiverOid, Element sender) {
-		Coords coordsReceiver = controller.getReceiverCoords(receiverOid);
-		Coords coordsSender = controller.getReceiverCoords(sender.getOid());
+	public void calibrate(ElementController controller, Long receiverOid, Element sender) {
 		
-		if (coordsReceiver != null && coordsSender != null) { 
-			double distanceByCoords = Math.sqrt(Math.pow((coordsReceiver.getX() - coordsSender.getX()), 2) 
-					                       + Math.pow((coordsReceiver.getY() - coordsSender.getY()), 2));
-		    double distanceByRssi = convertRssi(sender.getRssi());		    
-		    double error = Math.abs(distanceByCoords - distanceByRssi);
-		    
-		    if (error != 0 && error > 1) {
-		    	calibratePathLoss(controller, receiverOid, sender);
-		    }
+		double n = PropertiesManager.n;
+		double A = PropertiesManager.A;
+		double E = 0.5; // user selected
+		double atstumas = computeDistance(controller.getReceiverCoords(receiverOid), 
+				controller.getReceiverCoords(sender.getOid()));
+	    
+		double dgautas = Math.pow(10, (sender.getRssi() - A) / (10 * n));
+	    double error = Math.abs(atstumas - dgautas);
+	    
+		double tarpinePaklaida = error;
+		@SuppressWarnings("unused")
+		double tarpinisAtstumas;
+		double nTemp = 2;
+		
+		if (E <= error) {
+		    for (double i = 1; i <= 5; i+= 0.01) {
+		    	double dTemp =  Math.pow(10, (sender.getRssi() - A) / (10 * i));
+				double errorTemp = Math.abs(atstumas -  dTemp);
+			    if (tarpinePaklaida > errorTemp) {
+					   tarpinisAtstumas = dTemp;
+					   tarpinePaklaida = errorTemp;
+					   nTemp = i;
+				}
+			}
 		}
-		return true;
+		PropertiesManager.n = nTemp;
 	}
 	
-	private void calibratePathLoss(ElementController controller, Long receiverOid, Element sender) {
-		while (error(controller, receiverOid, sender)) {
-			if (firstRun) {
-				PropertiesManager.n = 1;
-			}
-			PropertiesManager.n = PropertiesManager.n + 0.1;
-		}
+	private double computeDistance(Coords rCoords, Coords rCoords2) {
+		return Math.sqrt(Math.pow(rCoords.getX() - rCoords2.getX(), 2) + Math.pow(rCoords.getY() - rCoords.getY(), 2));
 	}
 	
 	@SuppressWarnings(value = { "unused" })
@@ -96,11 +102,6 @@ public class Calibration implements Algorithm {
 		}
 		
 		System.out.println(calibration.convertRssi(85, 3));
-		
-/*		for (int i = 0; i < 255; i++) {
-			System.out.printf("RSS %d Distance %f ", i, calibration.convertRssi(i, 2));
-			System.out.println();
-		}*/
 	}
 
 }

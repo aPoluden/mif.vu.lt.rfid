@@ -6,7 +6,6 @@ import java.util.List;
 
 import mif.vu.lt.rfid.app.controller.ElementController;
 import mif.vu.lt.rfid.app.manager.SequenceManager.TagSpec;
-import mif.vu.lt.rfid.app.model.Root;
 import mif.vu.lt.rfid.app.model.coords.Coords;
 
 public class MinMax implements Algorithm {
@@ -55,7 +54,6 @@ public class MinMax implements Algorithm {
 		} else if (tagList.size() > 3) {
 			return null;
 		}
-		
 		return new Coords((int) X, (int) Y, (int) Z);
 	}
 }

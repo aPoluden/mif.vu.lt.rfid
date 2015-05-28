@@ -5,7 +5,6 @@ import java.util.List;
 import mif.vu.lt.rfid.app.controller.ElementController;
 import mif.vu.lt.rfid.app.manager.PropertiesManager;
 import mif.vu.lt.rfid.app.manager.SequenceManager.TagSpec;
-import mif.vu.lt.rfid.app.model.Root;
 import mif.vu.lt.rfid.app.model.coords.Coords;
 
 public interface Algorithm {
